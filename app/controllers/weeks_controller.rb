@@ -6,5 +6,6 @@ class WeeksController < ApplicationController
   def create
     @week = Week.new
     @week.save
+    redirect_to week_path(@week)
   end
 end
