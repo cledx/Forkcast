@@ -139,12 +139,12 @@
 
 .auth-card {
   width: 100%;
-  max-width: 420px; // um pouco maior que 400px
+  max-width: 420px;
   margin: 0 auto;
   padding: 2.5rem;
   border-radius: $border-radius-xl;
-  background-color: $surface; // garante contraste com o fundo
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); // sombra mais elegante
+  background-color: $surface;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
