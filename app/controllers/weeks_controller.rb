@@ -12,8 +12,7 @@ class WeeksController < ApplicationController
   def create
     # Weeks were missing an association to the user, so I added it here.
     @week = Week.new
-    @week.user = current_user
-    @week.month = Date.today.month
+    week_generation
     @week.save
     redirect_to week_path(@week)
   end
