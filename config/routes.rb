@@ -15,14 +15,15 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   resources :weeks, only: [:create, :show] do
-    resources :days, only: [:show, :create, :edit, :update, :destroy]
+    resources :days, only: [:show, :create, :edit, :update, :destroy] do
+      resources :dishes, only: [:show]
+    end
+    resources :shopping_items, only: [:index]
   end
 
+  resources :shopping_items, only: [:update]
   resources :recipes, only: [:show]
 
-  resources :shopping_items, only: [:index, :update]
-
-  # resources :settings, only: [:show, :edit]
   get "/settings", to: "users#settings", as: :settings
   patch "/settings", to: "users#update_settings"
 end
