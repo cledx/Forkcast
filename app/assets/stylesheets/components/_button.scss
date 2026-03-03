@@ -1,0 +1,83 @@
+.btn {
+  border-radius: $border-radius-lg;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  padding: 0.6rem 1.2rem;
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+// Main action
+
+.btn-primary-custom {
+  background-color: $primary;
+  border: none;
+  color: white;
+
+  &:hover {
+    background-color: $primary-dark;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    background-color: darken($primary-dark, 5%);
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    background-color: $text-muted;
+    cursor: not-allowed;
+  }
+}
+
+// Secondary action
+
+.btn-outline-primary-custom {
+  background: transparent;
+  border: 2px solid $primary;
+  color: $primary;
+
+  &:hover {
+    background-color: $primary;
+    color: white;
+  }
+}
+
+// Strong CTA
+
+.btn-accent {
+  background-color: $accent;
+  border: none;
+  color: white;
+
+  &:hover {
+    background-color: darken($accent, 8%);
+  }
+}
+
+// Lightweight UI / dashboard
+
+.btn-soft {
+  background-color: $primary-light;
+  border: none;
+  color: $primary;
+
+  &:hover {
+    background-color: lighten($primary-light, 5%);
+  }
+}
+
+// Discreet actions
+
+.btn-ghost {
+  background: transparent;
+  border: none;
+  color: $text-secondary;
+
+  &:hover {
+    background-color: rgba($primary, 0.1);
+    color: $primary;
+  }
+}
