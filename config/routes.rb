@@ -22,7 +22,6 @@ Rails.application.routes.draw do
 
   resources :shopping_items, only: [:index, :update]
 
-  # resources :settings, only: [:show, :edit]
   get "/settings", to: "users#settings", as: :settings
   patch "/settings", to: "users#update_settings"
 end
