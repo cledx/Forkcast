@@ -1,10 +1,12 @@
 class ShoppingItemsController < ApplicationController
   def index
-    @shopping_items = ShoppingItem.all
+    @week = Week.find(params[:week_id])
+    @shopping_items = @week.shopping_items.all
   end
 
   def update
-    @shopping_item = ShoppingItem.find(params[:id])
+    @week = Week.find(params[:week_id])
+    @shopping_items = @week.shopping_items.find(params[:id])
     @shopping_item.update
     if @shopping_item.save
       redirect_to shopping_items

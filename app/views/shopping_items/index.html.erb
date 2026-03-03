@@ -4,4 +4,4 @@
   <p>Name: <%= item.ingredient.name %> - Total: <%= item.total %> - Units: <%= item.unit %> - Purchased: <%= item.purchased %></p>
 <% end %>
 
-<%= link_to "Week show", weeks_path %>
+<%= link_to "Week show", week_path(params[:week_id]) %>

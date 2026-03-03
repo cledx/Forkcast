@@ -5,4 +5,4 @@
 <p>Cuisine: <%= @recipe.cuisine %></p>
 <p>Instructions: <%= @recipe.instructions %></p>
 
-<%# <%= link_to "Dishes", week_day_path(@day) %>
+<%= link_to "Dishes", week_day_path(params[:day_id]) %>
