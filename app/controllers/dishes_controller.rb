@@ -1,10 +1,6 @@
 class DishesController < ApplicationController
-  def show
-    @dish = Dish.find(params[:id])
-  end
-
   def update
-    # This is where we would update the dish, for a given day. 
+    # This is where we would update the dish, for a given day.
     @dish = Dish.find(params[:id])
     if @dish.update(dish_params)
       redirect_to week_day_path(@dish.day)
