@@ -8,7 +8,7 @@ class UsersController < ApplicationController
 
   def update_settings
     if @user.update(user_params)
-      redirect_to settings_path(current_user)
+      redirect_to new_user_registration_path
     else
       render :settings, status: :unprocessable_entity
     end
