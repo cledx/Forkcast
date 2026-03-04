@@ -5,7 +5,6 @@
     <% day = day.first %>
     <div>
       <% if day %>
-
         <%= link_to week_day_path(@week, day) do %>
           <h3><%= day.date.strftime("%e") %></h3>
         <% end %>
