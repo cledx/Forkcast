@@ -1,26 +1,41 @@
-<h1>weeks show</h1>
+<h1>Dashboard</h1>
 
 <div data-controller="sortable" id="calendar">
   <%= week_calendar(number_of_weeks: 2, events: @week.days, attribute: :date )  do |date, day| %>
     <% day = day.first %>
-    <div>
-      <% if day %>
-        <%= link_to week_day_path(@week, day) do %>
-          <h3><%= day.date.strftime("%e") %></h3>
-        <% end %>
-        <% day.dishes.each do |dish| %>
-          <ul class="sortable-list" id="day-<%= day.id %>">
-            <li id="dish-<%= dish.id %>">
-              <%= link_to dish_path(dish) do %>
-                <%= dish.recipe.name %>
-              <% end %>
-            </li>
-          </ul>
-        <% end %>
-      <% else %>
-        <%= date.strftime("%e") %>
+    <% if day %>
+      <%= link_to week_day_path(@week, day) do %>
+        <h3><%= day.date.strftime("%e") %></h3>
       <% end %>
-    </div>
+
+      <% ["breakfast", "lunch", "dinner"].each do |category| %>
+        <h4><%= category.capitalize %></h4>
+        <% dishes = day.dishes.select { |dish| dish.category == category } %>
+        <div class="sortable-list" data-day_id="<%= day.id %>" data-category="<%= category %>">
+          <% if dishes.any? %>
+            <% dishes.each do |dish| %>
+              <div data-dish_id="<%= dish.id %>">
+                <%= link_to dish_path(dish) do %>
+                  <%= dish.recipe.name %>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
+    <% else %>
+      <%= date.strftime("%e") %>
+      <h4>Breakfast</h4>
+        <ul class="sortable-list">
+        </ul>
+      <h4>Lunch</h4>
+        <ul class="sortable-list">
+        </ul>
+      <h4>Dinner</h4>
+        <ul class="sortable-list">
+        </ul>
+    <% end %>
   <% end %>
   <%= link_to "Shopping list", week_shopping_items_path(@week) %>
 </div>

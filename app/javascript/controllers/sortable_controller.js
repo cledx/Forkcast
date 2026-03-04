@@ -9,15 +9,14 @@ export default class extends Controller {
         group: "calendar",
         animation: 150,
         onEnd: async function (evt) {
-          console.log(evt)
-          const dish = evt.item;
-          const newDay = evt.to;
+          const dish = evt.item.dataset.dish_id;
+          const category = evt.to.dataset.category;
+          const newDay = evt.to.dataset.day_id;
           const formData = {
-            dish: {day_id: newDay.id.split("-")[1]}
+            dish: {day_id: newDay, category: category}
           }
 
-          const url = `/dishes/${dish.id.split("-")[1]}`
-          console.log(url);
+          const url = `/dishes/${dish}`
 
           fetch(url, {
             method: "PATCH",
