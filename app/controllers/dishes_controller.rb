@@ -15,6 +15,12 @@ class DishesController < ApplicationController
     @dish.update(dish_params)
   end
 
+  def destroy
+    @dish = Dish.find(params[:id])
+    @dish.destroy
+    redirect_back_or_to root_path, status: :see_other
+  end
+
   private
 
   def dish_params

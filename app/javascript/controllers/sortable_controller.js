@@ -12,6 +12,16 @@ export default class extends Controller {
           const dish = evt.item.dataset.dish_id;
           const category = evt.to.dataset.category;
           const newDay = evt.to.dataset.day_id;
+          const newCategory = evt.to
+          const previousCategory = evt.from
+          console.log(previousCategory.children);
+          if (previousCategory.children.length === 0) {
+            previousCategory.innerHTML = `<div class="empty-meal">
+              <span>No ${previousCategory.dataset.category} planned</span>
+            </div>`
+          }
+          newCategory.querySelector(".empty-meal")?.remove()
+
           const formData = {
             dish: {day_id: newDay, category: category}
           }
