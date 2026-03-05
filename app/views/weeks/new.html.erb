@@ -1,4 +1,4 @@
-<h1>Week Generation</h1>
+<h1>Let's plan our meals for the week</h1>
 
 <div data-controller="sortable" id="calendar">
   <%= week_calendar(number_of_weeks: 1, events: [], attribute: :date) do |date, day| %>
@@ -8,3 +8,5 @@
     <% end %>
   <% end %>
 </div>
+
+<%= link_to 'Generate meals', weeks_path, class: "btn btn-primary" %>
