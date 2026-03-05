@@ -9,21 +9,23 @@ class Ai::RecipeGen
         .with_tool(SearchIngredientsTool)
         .with_tool(SearchRecipesTool)
         .with_instructions(prompt_gen)
-        .with_schema(Ai::Schemas::RecipeSchema)
+        .with_schema(Ai::Schemas::RecipeSchema.new("RecipeSchema"))
         response = @rubyllm.ask("Generate a recipe for #{@main_ingredient} in #{@cuisine} cuisine.")
-        parsed_response = JSON.parse(response, symbolize_names: true)
+        parsed_response = response.content
+        parsed_response = JSON.parse(parsed_response, symbolize_names: true) if parsed_response.is_a?(String)
+        parsed_response = parsed_response.deep_symbolize_keys if parsed_response.respond_to?(:deep_symbolize_keys)
         recipe_attrs = {
             name: parsed_response[:name],
             cuisine: parsed_response[:cuisine],
             cooktime: parsed_response[:cooktime],
             instructions: parsed_response[:instructions],
         }
-        recipe = Recipe.new(recipe_attrs)
+        recipe = Recipe.create(recipe_attrs)
         parsed_response[:ingredients].each do |ingredient|
             if Ingredient.exists?(name: ingredient[:name])
-                recipe.recipe_items.create(ingredient: Ingredient.find_by(name: ingredient[:name]), amount: ingredient[:quantity_value], unit: ingredient[:quantity_unit])
+                recipe.recipe_items.new(ingredient: Ingredient.find_by(name: ingredient[:name]), amount: ingredient[:quantity_value], unit: ingredient[:quantity_unit])
             else
-                recipe.recipe_items.create(ingredient: Ingredient.create(name: ingredient[:name]), amount: ingredient[:quantity_value], unit: ingredient[:quantity_unit])
+                recipe.recipe_items.new(ingredient: Ingredient.create(name: ingredient[:name]), amount: ingredient[:quantity_value], unit: ingredient[:quantity_unit])
             end
         end
         recipe.save

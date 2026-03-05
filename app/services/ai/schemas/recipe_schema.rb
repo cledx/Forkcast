@@ -1,7 +1,7 @@
 class Ai::Schemas::RecipeSchema < RubyLLM::Schema
   string :name, description: "The name of the recipe"
   string :cuisine, description: "Cuisine type (e.g., Italian, Chinese, Mexican)"
-  number :cooktime, description: "Cooking time in minutes"
+  number :cooktime, description: "Total time to prepare and cook the recipe in seconds"
   string :instructions, description: "Full cooking instructions as text. Use numbered steps separated by new lines."
 
   array :ingredients, description: "The list of ingredients for the recipe" do
