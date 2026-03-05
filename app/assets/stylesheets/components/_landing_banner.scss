@@ -1,0 +1,10 @@
+.transparent-nav .navbar {
+  background-color: transparent !important;
+  position: absolute;
+  width: 100%;
+  z-index: 100;
+}
+
+.transparent-nav .banner {
+  margin-top: -56px;
+}
