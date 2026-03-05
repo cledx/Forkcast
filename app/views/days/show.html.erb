@@ -40,6 +40,7 @@
                 <li><%= ingredient.name %></li>
               <% end %>
             </ul>
+          <%= link_to "Delete", dish_path(dish), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
           </div>
         <% end %>
       <% end %>
@@ -62,6 +63,8 @@
                 <li><%= ingredient.name %></li>
               <% end %>
             </ul>
+            <%= link_to "Delete", dish_path(dish), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+
           </div>
         <% end %>
       <% end %>
@@ -84,6 +87,8 @@
                 <li><%= ingredient.name %></li>
               <% end %>
             </ul>
+            <%= link_to "Delete", dish_path(dish), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+
           </div>
         <% end %>
       <% end %>
