@@ -1,4 +1,4 @@
-class Ai::DishGenerator
+class Ai::DishGen
     # This one might not be needed, but I'll keep it here for now.
     def initialize(day, portions, meal_name)
       @day = day
@@ -7,20 +7,20 @@ class Ai::DishGenerator
     end
 
     def generate_dish
-        @rubyllm = RubyLLM.new.chat
-        .with_tool(SearchIngredientsTool, SearchRecipesTool)
-        .with_instruction(prompt_gen)
-        .with_schema(Ai::Schemas::DishSchema)
+        @rubyllm = RubyLLM.chat
+        .with_tool(SearchIngredientsTool)
+        .with_tool(SearchRecipesTool)
+        .with_instructions(prompt_gen)
+        .with_schema(Ai::Schemas::DishSchema.new("DishSchema"))
         previous_meals = previous_week_meals_text(@day.week.user, @day.date)
         current_week_meals = @day.week.dishes.map { |d| "#{d.day.date.strftime('%A %Y-%m-%d')}: #{d.category}: #{d.recipe.name}"}.join("\n")
         response = @rubyllm.ask("The client's previous weeks meals were: #{previous_meals}. You need to generate a meal for #{@day.date.strftime('%A')}. This weeks meals so far are: #{current_week_meals}. Generate a new dish not already in the plan and avoid meals from last week.")
-        
-        parsed_response = JSON.parse(response)
-        if parsed_response.recipe_id == "Generate new Recipe"
-          new_recipe = Ai::RecipeGenerator.new(parsed_response.recipe_data).generate_recipe
+        p response.content
+        if response.content["recipe_id"] == "Generate new Recipe"
+          new_recipe = Ai::RecipeGen.new(response.content["recipe_data"]["cuisine"], response.content["recipe_data"]["main_ingredient"]).generate_recipe
           dish = Dish.create(day: @day, recipe: new_recipe, category: @meal_name, portions: @portions)
         else
-          dish = Dish.create(day: @day, recipe_id: parsed_response.recipe_id, category: @meal_name, portions: @portions)
+          dish = Dish.create(day: @day, recipe_id: response.content["recipe_id"], category: @meal_name, portions: @portions)
         end
         dish
     end
