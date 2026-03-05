@@ -87,3 +87,10 @@
 
   </div>
 </div>
+<%= simple_form_for Dish.new do |f| %>
+  <%= f.association :recipe %>
+  <%= f.input :portions %>
+  <%= f.input :category, collection: ["breakfast", "lunch", "dinner"] %>
+  <input type="hidden" name="dish[day_id]" value="<%= @day.id %>">
+  <%= f.submit %>
+<% end %>
