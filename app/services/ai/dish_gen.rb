@@ -9,7 +9,9 @@ class Ai::DishGenerator
     def generate_dish
         @rubyllm = RubyLLM.new
         @rubyllm
-        @rubyllm.chat.with_tool(SearchIngredientsTool, SearchRecipesTool)
+        @rubyllm.chat
+        .with_tool(SearchIngredientsTool, SearchRecipesTool)
+        .with_instruction(prompt_gen)
         response = @rubyllm.ask("Generate a recipe for #{@meal_name} with the folloing number of portions: #{@dish_num}")
         response.tools.each do |tool|
             if tool.name == "SearchIngredientsTool"

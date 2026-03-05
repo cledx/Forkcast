@@ -75,4 +75,5 @@ end
 
 # added gems
 gem "ruby_llm"
+gem 'ruby_llm-schema'
 gem "simple_calendar"
