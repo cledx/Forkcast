@@ -2,6 +2,7 @@ class WeeksController < ApplicationController
   def show
     @week = Week.find(params[:id])
     @today = @week.days.find { |day| day.date.to_date == Date.current }
+    @number_of_weeks = @week.next_week ? 2 : 1
     @calendar_days = @week.days
     @calendar_days += @week.next_week.days if @week.next_week
     # This is to prevent users from accessing weeks that they don't own.
