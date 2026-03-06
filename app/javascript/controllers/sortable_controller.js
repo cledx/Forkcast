@@ -8,21 +8,34 @@ export default class extends Controller {
       Sortable.create(el, {
         group: "calendar",
         animation: 150,
-        onEnd: function (evt) {
-          console.log(evt)
-          const dish = evt.item;
-          const newDay = evt.to;
+        onEnd: async function (evt) {
+          const dish = evt.item.dataset.dish_id;
+          const category = evt.to.dataset.category;
+          const newDay = evt.to.dataset.day_id;
+          const newCategory = evt.to
+          const previousCategory = evt.from
+          console.log(previousCategory.children);
+          if (previousCategory.children.length === 0) {
+            previousCategory.innerHTML = `<div class="empty-meal">
+              <span>No ${previousCategory.dataset.category} planned</span>
+            </div>`
+          }
+          newCategory.querySelector(".empty-meal")?.remove()
 
-          fetch(`/dishes/${dish.id.split("-")[1]}`, {
+          const formData = {
+            dish: {day_id: newDay, category: category}
+          }
+
+          const url = `/dishes/${dish}`
+
+          fetch(url, {
             method: "PATCH",
             headers:{
               'Content-Type': 'application/json',
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
             },
-            body: JSON.stringify({
-              day_id: newDay
-            })
+            body: JSON.stringify(formData)
           });
-          console.log(dish);
         },
       });
     });

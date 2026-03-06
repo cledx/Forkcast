@@ -1,11 +1,106 @@
-<h1>days view</h1>
+<!-- banner -->
+<div class="page-banner">
+  <div class="container">
 
-<% @day.dishes.each do |dish| %>
-  <ul>
-    <%= link_to dish_path(dish) do %>
-      <li><%= dish.recipe.name %></li>
-    <% end %>
-  </ul>
+    <div class="banner-inner">
+      <h1 class="banner-title">
+        <%= @day.date.strftime("%A, %d %B") %>
+      </h1>
+      <p class="banner-subtitle">Check what you need to prepare!</p>
+    </div>
+
+  </div>
+</div>
+
+<% breakfasts = @day.dishes.where(category: "breakfast") %>
+<% lunches    = @day.dishes.where(category: "lunch") %>
+<% dinners    = @day.dishes.where(category: "dinner") %>
+
+<div class="container mt-4">
+  <div class="row">
+
+      <!-- Back -->
+      <div class="d-flex justify-content-between mb-1 p-1">
+        <%= link_to "‹ Back", week_path(current_user.weeks.last), class: "btn btn-ghost ms-2" %>
+      </div>
+
+    <!-- Breakfast -->
+    <div class="col-md-4">
+      <div class="meal-column">
+        <h4>Breakfast</h4>
+      </div>
+
+      <% breakfasts.each do |dish| %>
+        <%= link_to dish_path(dish), class: "text-decoration-none" do %>
+          <div class="card p-3 mb-3">
+            <h5><%= dish.recipe.name %></h5>
+            <p class="mb-0">Ingredients:</p>
+            <ul class="list mb-0">
+              <% dish.recipe.ingredients.each do |ingredient| %>
+                <li><%= ingredient.name %></li>
+              <% end %>
+            </ul>
+          <%= link_to "Delete", dish_path(dish), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Lunch -->
+    <div class="col-md-4">
+
+      <div class="meal-column">
+        <h4>Lunch</h4>
+      </div>
+
+      <% lunches.each do |dish| %>
+        <%= link_to dish_path(dish), class: "text-decoration-none" do %>
+          <div class="card p-3 mb-3">
+            <h5><%= dish.recipe.name %></h5>
+            <p class="mb-0">Ingredients:</p>
+            <ul class="list mb-0">
+              <% dish.recipe.ingredients.each do |ingredient| %>
+                <li><%= ingredient.name %></li>
+              <% end %>
+            </ul>
+            <%= link_to "Delete", dish_path(dish), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Dinner -->
+    <div class="col-md-4">
+
+      <div class="meal-column">
+        <h4>Dinner</h4>
+      </div>
+
+      <% dinners.each do |dish| %>
+        <%= link_to dish_path(dish), class: "text-decoration-none" do %>
+          <div class="card p-3 mb-3">
+            <h5><%= dish.recipe.name %></h5>
+            <p class="mb-0">Ingredients:</p>
+            <ul class="list mb-0">
+              <% dish.recipe.ingredients.each do |ingredient| %>
+                <li><%= ingredient.name %></li>
+              <% end %>
+            </ul>
+            <%= link_to "Delete", dish_path(dish), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+  </div>
+</div>
+
+<%= simple_form_for Dish.new do |f| %>
+  <%= f.association :recipe %>
+  <%= f.input :portions %>
+  <%= f.input :category, collection: ["breakfast", "lunch", "dinner"] %>
+  <input type="hidden" name="dish[day_id]" value="<%= @day.id %>">
+  <%= f.submit %>
 <% end %>
-
-<%= link_to "Week show", week_path(@day.week) %>
