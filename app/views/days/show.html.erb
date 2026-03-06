@@ -31,16 +31,21 @@
       </div>
 
       <% breakfasts.each do |dish| %>
-        <%= link_to dish_path(dish), class: "text-decoration-none" do %>
+        <%= link_to dish_path(dish), class:"text-decoration-none" do %>
           <div class="card p-3 mb-3">
-            <h5><%= dish.recipe.name %></h5>
-            <p class="mb-0">Ingredients:</p>
-            <ul class="list mb-0">
+            <div class="d-flex justify-content-between">
+              <h5><%= dish.recipe.name %></h5>
+                <%= link_to dish_path(dish),
+                            data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } do %>
+                  <i class="fa-solid fa-xmark"></i>
+                <% end %>
+            </div>
+            <p class="mb-0 text-muted">Ingredients:</p>
+            <ul class="list mb-0 text-muted">
               <% dish.recipe.ingredients.each do |ingredient| %>
                 <li><%= ingredient.name %></li>
               <% end %>
             </ul>
-          <%= link_to "Delete", dish_path(dish), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
           </div>
         <% end %>
       <% end %>
@@ -56,15 +61,19 @@
       <% lunches.each do |dish| %>
         <%= link_to dish_path(dish), class: "text-decoration-none" do %>
           <div class="card p-3 mb-3">
-            <h5><%= dish.recipe.name %></h5>
-            <p class="mb-0">Ingredients:</p>
-            <ul class="list mb-0">
+            <div class="d-flex justify-content-between">
+              <h5><%= dish.recipe.name %></h5>
+                <%= link_to dish_path(dish),
+                            data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } do %>
+                  <i class="fa-solid fa-xmark"></i>
+              <% end %>
+            </div>
+            <p class="mb-0 text-muted">Ingredients:</p>
+            <ul class="list mb-0 text-muted">
               <% dish.recipe.ingredients.each do |ingredient| %>
                 <li><%= ingredient.name %></li>
               <% end %>
             </ul>
-            <%= link_to "Delete", dish_path(dish), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
-
           </div>
         <% end %>
       <% end %>
@@ -80,15 +89,19 @@
       <% dinners.each do |dish| %>
         <%= link_to dish_path(dish), class: "text-decoration-none" do %>
           <div class="card p-3 mb-3">
-            <h5><%= dish.recipe.name %></h5>
-            <p class="mb-0">Ingredients:</p>
-            <ul class="list mb-0">
+            <div class="d-flex justify-content-between">
+              <h5><%= dish.recipe.name %></h5>
+                <%= link_to dish_path(dish),
+                            data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } do %>
+                  <i class="fa-solid fa-xmark"></i>
+                <% end %>
+            </div>
+            <p class="mb-0 text-muted">Ingredients:</p>
+            <ul class="list mb-0 text-muted">
               <% dish.recipe.ingredients.each do |ingredient| %>
                 <li><%= ingredient.name %></li>
               <% end %>
             </ul>
-            <%= link_to "Delete", dish_path(dish), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
-
           </div>
         <% end %>
       <% end %>
@@ -97,6 +110,7 @@
   </div>
 </div>
 
+<!--
 <%= simple_form_for Dish.new do |f| %>
   <%= f.association :recipe %>
   <%= f.input :portions %>
@@ -104,3 +118,5 @@
   <input type="hidden" name="dish[day_id]" value="<%= @day.id %>">
   <%= f.submit %>
 <% end %>
+
+-->
