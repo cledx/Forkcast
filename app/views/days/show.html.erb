@@ -53,7 +53,6 @@
                 <li><%= ingredient.name %></li>
               <% end %>
             </ul>
-          <%= link_to "Delete", dish_path(dish), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
           </div>
         <% end %>
       <% end %>
@@ -63,6 +62,7 @@
   </div>
 </div>
 
+<!--
 <%= simple_form_for Dish.new do |f| %>
   <%= f.association :recipe %>
   <%= f.input :portions %>
@@ -70,3 +70,5 @@
   <input type="hidden" name="dish[day_id]" value="<%= @day.id %>">
   <%= f.submit %>
 <% end %>
+
+-->
