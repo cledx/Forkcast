@@ -7,6 +7,8 @@
         <%= @day.date.strftime("%A, %d %B") %>
       </h1>
       <p class="banner-subtitle">Check what you need to prepare!</p>
+        <%= link_to "‹ Previous day","#" , class: "text-decoration-none btn-ghost-white ms-2" %>
+        <%= link_to "Next day ›","#" , class: "text-decoration-none btn-ghost-white ms-2" %>
     </div>
 
   </div>
@@ -24,89 +26,35 @@
         <%= link_to "‹ Back", week_path(current_user.weeks.last), class: "btn btn-ghost ms-2" %>
       </div>
 
-    <!-- Breakfast -->
-    <div class="col-md-4">
-      <div class="meal-column">
-        <h4>Breakfast</h4>
-      </div>
+    <% ["breakfast", "lunch", "dinner"].each do |category| %>
+      <div class="col-md-4">
+        <div class="meal-column">
+          <h4><%= category.capitalize %></h4>
+        </div>
 
-      <% breakfasts.each do |dish| %>
-        <%= link_to dish_path(dish), class:"text-decoration-none" do %>
-          <div class="card p-3 mb-3">
-            <div class="d-flex justify-content-between">
-              <h5><%= dish.recipe.name %></h5>
-                <%= link_to dish_path(dish),
-                            data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } do %>
-                  <i class="fa-solid fa-xmark"></i>
-                <% end %>
-            </div>
-            <p class="mb-0 text-muted">Ingredients:</p>
-            <ul class="list mb-0 text-muted">
-              <% dish.recipe.ingredients.each do |ingredient| %>
-                <li><%= ingredient.name %></li>
-              <% end %>
-            </ul>
+        <% category_dishes = @dishes.select {|dish| dish.category == category} %>
+
+        <% category_dishes.each do |dish| %>
+          <div class="position-relative">
+            <%= link_to dish_path(dish), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "delete-dish-btn" do %>
+              <i class="fa-solid fa-xmark"></i>
+            <% end %>
+            <%= link_to dish_path(dish), class: "text-decoration-none" do %>
+              <div class="card p-3 mb-3">
+                  <h5><%= dish.recipe.name %></h5>
+                <p class="mb-0 text-muted">Ingredients:</p>
+                <ul class="list mb-0 text-muted">
+                  <% dish.recipe.ingredients.first(3).each do |ingredient| %>
+                    <li><%= ingredient.name %></li>
+                  <% end %>
+                </ul>
+                <%= "..." if dish.recipe.ingredients.count > 3 %>
+              </div>
+            <% end %>
           </div>
         <% end %>
-      <% end %>
-    </div>
-
-    <!-- Lunch -->
-    <div class="col-md-4">
-
-      <div class="meal-column">
-        <h4>Lunch</h4>
       </div>
-
-      <% lunches.each do |dish| %>
-        <%= link_to dish_path(dish), class: "text-decoration-none" do %>
-          <div class="card p-3 mb-3">
-            <div class="d-flex justify-content-between">
-              <h5><%= dish.recipe.name %></h5>
-                <%= link_to dish_path(dish),
-                            data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } do %>
-                  <i class="fa-solid fa-xmark"></i>
-              <% end %>
-            </div>
-            <p class="mb-0 text-muted">Ingredients:</p>
-            <ul class="list mb-0 text-muted">
-              <% dish.recipe.ingredients.each do |ingredient| %>
-                <li><%= ingredient.name %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
-      <% end %>
-    </div>
-
-    <!-- Dinner -->
-    <div class="col-md-4">
-
-      <div class="meal-column">
-        <h4>Dinner</h4>
-      </div>
-
-      <% dinners.each do |dish| %>
-        <%= link_to dish_path(dish), class: "text-decoration-none" do %>
-          <div class="card p-3 mb-3">
-            <div class="d-flex justify-content-between">
-              <h5><%= dish.recipe.name %></h5>
-                <%= link_to dish_path(dish),
-                            data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } do %>
-                  <i class="fa-solid fa-xmark"></i>
-                <% end %>
-            </div>
-            <p class="mb-0 text-muted">Ingredients:</p>
-            <ul class="list mb-0 text-muted">
-              <% dish.recipe.ingredients.each do |ingredient| %>
-                <li><%= ingredient.name %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
-      <% end %>
-    </div>
-
+    <% end %>
   </div>
 </div>
 
