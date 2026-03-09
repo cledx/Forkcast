@@ -57,9 +57,14 @@
               <div id="flipcard">
                 <div class="front">
                   <div class="delete-dish-btn">
-                  <%= link_to dish_path(dish), class:"icon-color-white p-1" do %>
-                    <i class="fa-regular fa-heart fa-lg"></i>
-                  <% end %>
+
+                    <%= link_to toggle_favorites_path(recipe_id: dish.recipe.id),
+                                data: { turbo_method: :post },
+                                class: "icon-color-white p-1" do %>
+
+                      <i class="<%= current_user.favorited?(dish.recipe) ? 'fa-solid fa-heart' : 'fa-regular fa-heart' %> fa-lg"></i>
+
+                    <% end %>
 
                   <%= link_to dish_path(dish, new_id: "regenerate"),
                   class: "icon-color-white p-1",

@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_many :favorites
+  has_many :favorite_recipes, through: :favorites, source: :recipe
   has_many :weeks
   has_many :day_templates
   has_many :days, through: :weeks
@@ -26,5 +27,9 @@ class User < ApplicationRecord
     range = prev_week_start.beginning_of_day..prev_week_end.end_of_day
     days_in_prev_week = days.where(date: range).order(:date)
     Dish.where(day_id: days_in_prev_week.select(:id)).includes(:recipe)
+  end
+
+  def favorited?(recipe)
+    favorites.exists?(recipe_id: recipe.id)
   end
 end
