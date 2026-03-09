@@ -15,7 +15,6 @@
           week_day_path(@day.week, @day.next_day),
           class: "text-decoration-none btn-ghost-white ms-2" if @day.next_day %>
     </div>
-
   </div>
 </div>
 
@@ -38,7 +37,7 @@
 
       <!-- Back -->
       <div class="d-flex justify-content-between mb-1 p-1">
-        <%= link_to "‹ Back", week_path(current_user.weeks.last), class: "btn btn-ghost ms-2" %>
+        <%= link_to "‹ Back", week_path(@day.week), class: "btn btn-ghost ms-2" %>
       </div>
 
     <% ["breakfast", "lunch", "dinner"].each do |category| %>
@@ -51,6 +50,7 @@
 
         <div data-controller="flipcard">
           <% category_dishes.each do |dish| %>
+          <%= link_to "(Regen)", dish_path(dish, new_id: "regenerate"), class: "ms-2 regen-link", data: { turbo_method: :patch, turbo_confirm: "Regenerate this dish?" } %>
             <div class="position-relative flipcard" data-action="click->flipcard#flip">
               <div id="flipcard">
                 <div class="front">
