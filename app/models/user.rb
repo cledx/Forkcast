@@ -1,8 +1,10 @@
 class User < ApplicationRecord
-  has_many :favorites
-  has_many :weeks
-  has_many :day_templates
+  has_many :favorites, dependent: :destroy
+  has_many :weeks, dependent: :destroy
+  has_many :day_templates, dependent: :destroy
   has_many :days, through: :weeks
+  has_many :dishes, through: :days
+  after_create :create_initial_week, :create_day_templates
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -19,5 +21,18 @@ class User < ApplicationRecord
     range = prev_week_start.beginning_of_day..prev_week_end.end_of_day
     days_in_prev_week = days.where(date: range).order(:date)
     Dish.where(day_id: days_in_prev_week.select(:id)).includes(:recipe)
+  end
+
+  private
+
+  def create_initial_week
+    weeks.create!(month: Date.current.month)
+  end
+
+  def create_day_templates
+    days = %w[Monday Tuesday Wednesday Thursday Friday Saturday Sunday]
+    days.each do |day|
+      day_templates.create!(day_name: day, breakfast: 0, lunch: 0, dinner: 2)
+    end
   end
 end
