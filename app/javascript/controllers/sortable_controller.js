@@ -11,12 +11,16 @@ export default class extends Controller {
         animation: 150,
         onEnd: async function (evt) {
           const dish = evt.item.dataset.dish_id;
+          console.log(dish);
+
           const category = evt.to.dataset.category;
           const oldCategory = evt.from.dataset.category
           const newDay = evt.to.dataset.day_id;
           const previousDay = evt.from.dataset.day_id;
           const newCategory = evt.to;
           const previousCategory = evt.from;
+          console.log(previousCategory);
+
           const currentDay = document.querySelector(".today-highlight").id
           const name = evt.item.dataset.recipe_name;
 
