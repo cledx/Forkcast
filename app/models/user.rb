@@ -36,6 +36,8 @@ class User < ApplicationRecord
     days.each do |day|
       day_templates.create!(day_name: day, breakfast: 0, lunch: 0, dinner: 2)
     end
+  end
+
   def favorited?(recipe)
     favorites.exists?(recipe_id: recipe.id)
   end
