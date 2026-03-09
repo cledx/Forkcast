@@ -21,7 +21,7 @@ class Ai::DishGen
         # If the recipe ID is "Generate new Recipe", then create a new recipe.
         if response.content["recipe_id"] == "Generate new Recipe"
           new_recipe = Ai::RecipeGen.new(response.content["recipe_data"]["cuisine"], response.content["recipe_data"]["main_ingredient"]).generate_recipe
-          dish = Dish.create(day: @day, recipe: new_recipe, category: @meal_name, portions: @portions)
+          dish = Dish.create(day: @day, recipe_id: new_recipe.id, category: @meal_name, portions: @portions)
         else
           dish = Dish.create(day: @day, recipe_id: response.content["recipe_id"], category: @meal_name, portions: @portions)
         end

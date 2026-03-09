@@ -10,4 +10,11 @@ class Week < ApplicationRecord
   def next_week
     user.weeks.where("id > ?", id).order(:id).first
   end
+
+  def generate_next_week
+      7.times do |i|
+        day = Day.new(date: (Date.today + 7).beginning_of_week + i.days, week: self).generate_day
+        day.save
+      end
+  end
 end

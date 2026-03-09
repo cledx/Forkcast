@@ -18,9 +18,8 @@ class WeeksController < ApplicationController
   end
 
   def create
-    @week = Week.new
-    week_generation
-    @week.save
+    @week = Week.create!(user: current_user)
+    WeekJob.perform_later(@week.id)
     redirect_to week_path(@week)
   end
 end
