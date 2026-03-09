@@ -88,50 +88,49 @@ LOREM_INSTRUCTIONS = "1. Preheat the oven to 200°C (400°F). Line a baking tray
 # ========================================================
 #
 
-  # If production gets all recipes
-  # if development do like 5 recipes
-
-  # send recipe instruction to AI 'return this in markdown'
-
 puts "Creating recipes..."
 filepath = "./db/data/recipesV2.json"
 serialized_data = File.read(filepath)
 recipes_data = JSON.parse(serialized_data)
 recipes = recipes_data["data"]
 
-recipes.each do |recipe_hash|
-  name = recipe_hash["name"]
-  cooktime = [600, 900, 1200, 1800, 2400, 3000].sample
-  instructions = recipe_hash["instructions"]
-  cuisine = recipe_hash["cuisine"]
-  image_url = recipe_hash["image_url"]
 
-  recipe = Recipe.create!(
-    name: name,
-    cooktime: cooktime,
-    instructions: instructions,
-    cuisine: cuisine,
-    image_url: image_url
+recipes.first(5).each do |recipe_hash|
+name = recipe_hash["name"]
+cooktime = [600, 900, 1200, 1800, 2400, 3000].sample
+instructions = recipe_hash["instructions"]
+cuisine = recipe_hash["cuisine"]
+image_url = recipe_hash["image_url"]
+
+recipe = Recipe.create!(
+  name: name,
+  cooktime: cooktime,
+  instructions: instructions,
+  cuisine: cuisine,
+  image_url: image_url
+)
+
+ingredients = recipe_hash["ingredients"]
+
+ingredients.each do |ingredient_hash|
+  ingredient = Ingredient.find_by(name: ingredient_hash["name"].downcase)
+  ingredient = Ingredient.create(name: ingredient_hash["name"].downcase) unless ingredient
+
+  amount = 1
+  unit = ingredient_hash["amount"].strip
+  # amount = ingredient_hash["amount"].gsub(/[^0-9]+/, '').strip.to_i
+  # unit = ingredient_hash["amount"].gsub(/[0-9]+/, '').strip
+  # unit = "nos." if unit == ""
+
+  RecipeItem.create!(
+    recipe: recipe,
+    ingredient: ingredient,
+    amount: amount,
+    unit: unit
   )
-
-  ingredients = recipe_hash["ingredients"]
-
-  ingredients.each do |ingredient_hash|
-    ingredient = Ingredient.find_by(name: ingredient_hash["name"].downcase)
-    ingredient = Ingredient.create(name: ingredient_hash["name"].downcase) unless ingredient
-
-    amount = ingredient_hash["amount"].gsub(/[^0-9]+/, '').strip.to_i
-    unit = ingredient_hash["amount"].gsub(/[0-9]+/, '').strip
-    unit = "nos." if unit == ""
-
-    RecipeItem.create!(
-      recipe: recipe,
-      ingredient: ingredient,
-      amount: amount,
-      unit: unit
-    )
   end
 end
+
 
 # ============================================================
 # USERS
