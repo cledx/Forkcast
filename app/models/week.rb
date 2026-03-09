@@ -21,7 +21,7 @@ class Week < ApplicationRecord
           partial: "weeks/dish_list",
           locals: { dishes: dishes, day: day, category: category }
         )
-        ActionCable.server.broadcast("week_#{id}", {
+        ActionCable.server.broadcast("week_#{user.weeks[-2].id}", {
           day_id: day.id,
           category: category,
           html: html

@@ -14,11 +14,13 @@ class Day < ApplicationRecord
 
   def generate_day
     day_template = week.user.day_templates.find_by(day_name: date.strftime("%A"))
-    unless day_template.nil?
+
+    if day_template.present?
       [day_template.breakfast, day_template.lunch, day_template.dinner].each_with_index do |portions, index|
-        Ai::DishGen.new(self, portions, ["breakfast", "lunch", "dinner"][index]).generate_dish if portions.present?
+        Ai::DishGen.new(self, portions, %w[breakfast lunch dinner][index]).generate_dish if portions.present?
       end
     end
+
     self
   end
 end
