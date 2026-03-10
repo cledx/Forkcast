@@ -41,9 +41,11 @@
                         <%= f.check_box :purchased,
                                         class: "form-check-input me-2",
                                         data: {action: "change->shopping-list#purchased", shopping_list_target: "checkboxes"} %>
-
-                        <%= item.ingredient.name %> — <%= item.unit %>
-
+                    <% if item.total.to_i == 0 %>
+                      <%= item.ingredient.name %>
+                    <% else %>
+                      <%= item.ingredient.name %> - <%= item.total %> <%= item.unit %>
+                    <% end %>
                       </label>
 
                     </div>
