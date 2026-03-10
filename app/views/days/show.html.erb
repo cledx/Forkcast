@@ -32,7 +32,7 @@
   } %>
 <% all_meals = [breakfasts, lunches, dinners] %>
 
-<div class="container mt-4">
+<div class="container mt-4" data-day-id="<%= @day.id %>">
   <div class="row">
 
       <!-- Back -->
@@ -41,7 +41,8 @@
       </div>
 
     <% ["breakfast", "lunch", "dinner"].each do |category| %>
-      <div class="col-md-4">
+      <div class="col-md-4" data-day-id="<%= @day.id %>" data-category="<%= category %>">
+        <div data-day-replaceable>
         <div class="meal-column">
           <h4><%= category.capitalize %></h4>
         </div>
@@ -66,18 +67,9 @@
 
                     <% end %>
 
-                  <%= link_to(
-                        dish_path(dish, new_id: "regenerate"),
-                        class: "icon-color-white p-1",
-                        data: {
-                          bs_toggle: "tooltip",
-                          bs_placement: "bottom",
-                          bs_title: "Generate new recipe",
-                          action: "click->loading#show",
-                          turbo_method: :patch,
-                          turbo_confirm: "Do you want to find a new dish?"
-                        }
-                      ) do %>
+                  <%= link_to dish_path(dish, new_id: "regenerate"),
+                  class: "icon-color-white p-1",
+                  data: { bs_toggle: "tooltip", bs_placement: "bottom", bs_title: "Generate new recipe", action: "click->loading#show", turbo_method: :patch, turbo_confirm: "Do you want to generate a new dish?" } do %>
                     <i class="fa-solid fa-arrows-rotate fa-lg"></i>
                   <% end %>
                   <%= link_to dish_path(dish), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class:"icon-color-white p-1" do %>
@@ -123,6 +115,7 @@
               </div>
           </div>
           <% end %>
+        </div>
         </div>
       </div>
     <% end %>
