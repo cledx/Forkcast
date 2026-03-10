@@ -241,13 +241,13 @@ ALL_CUISINES = Recipe.all.pluck(:cuisine).map(&:capitalize)
         date: start_date + day_index.days
       )
 
-      rand(1..3).times do
+      3.times do |i|
         recipe = Recipe.all.sample
         dish = Dish.create!(
           day: day,
           recipe: recipe,
-          portions: rand(1..3),
-          category: CATEGORIES.sample
+          portions: 2,
+          category: ["breakfast", "lunch", "dinner"][i]
         )
 
         recipe.recipe_items.each do |ri|
