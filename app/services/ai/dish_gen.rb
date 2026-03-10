@@ -1,6 +1,6 @@
 class Ai::DishGen
 
-  def initialize(day, portions, meal_name)
+  def initialize(day, meal_name)
       @day = day
       @portions = portions
       @meal_name = meal_name
@@ -17,7 +17,7 @@ class Ai::DishGen
         # Generate the current week's meals text.
         current_week_meals = @day.week.dishes.map { |dish| "#{dish.day.date.strftime('%A')}: #{dish.category}: #{dish.recipe.name}"}.join("\n")
         # Generate the response from the AI.
-        response = @rubyllm.ask("The client's previous weeks meals were: #{previous_meals}. You need to generate a meal for #{@day.date.strftime('%A')} for #{@meal_name}. This weeks meals so far are: #{current_week_meals}. Generate a new dish not already in the plan and avoid meals from last week.")
+        response = @rubyllm.ask("The client's previous weeks meals were: #{previous_meals}. You need to generate a meal for #{@day.date.strftime('%A')} for #{@meal_name}. This weeks meals so far are: #{current_week_meals}.")
         # If the recipe ID is "Generate new Recipe", then create a new recipe.
         if response.content["recipe_id"] == "Generate new Recipe"
           new_recipe = Ai::RecipeGen.new(response.content["recipe_data"]["cuisine"], response.content["recipe_data"]["main_ingredient"]).generate_recipe
@@ -44,8 +44,22 @@ class Ai::DishGen
         .join("\n")
     end
 
+    private
+
     def prompt_gen
-      "You are a personal private meal cooridnator. Your client is a busy professional who need help with planning their meals for the week. You are given a history of what is planned for the week so far and you need to choose a recipe that is not already in the plan. Keep in mind the client's dietary restrictions and preferences. If there are no recipes that match in the database, then you will need to create a new recipe. \n The Client's dietary restrictions are: #{@day.week.user.disease} and #{@day.week.user.allergies}. \n The Client's preferences are: #{@day.week.user.preferred_cuisines} and #{@day.week.user.preferred_ingredients}."
+      prompt = <<-PROMPT
+      You are a meal cooridnator. 
+      The user is a busy person who need help with planning their meals to prep for the week. 
+      You need to plan a few meals for them to cook in advance to feed them for the week. 
+      Select from the following recipes and pick the best ones for the user.
+      PROMPT
+    end
+
+    def recipe_filter
+      # Return only recipes that do NOT contain any of the tags in @user.disease
+      recipes = Recipe.all.select do |recipe|
+        Array(@user.disease).none? { |tag| recipe.tags.include?(tag) }
+      end
     end
 
 end
