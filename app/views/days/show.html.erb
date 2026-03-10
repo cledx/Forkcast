@@ -75,7 +75,11 @@
                     <i class="fa-regular fa-trash-can fa-lg" ></i>
                   <% end %>
                   </div>
-                  <%= image_tag "onb-1.jpg", style: "width: 100%;" %>
+                  <% if dish.recipe.image_url.present? %>
+                    <%= image_tag dish.recipe.image_url %>
+                  <% else %>
+                    <%= image_tag 'flipcard_placeholder.jpg' %>
+                  <% end %>
                   <div class="front-title">
                     <%= link_to dish_path(dish), class:"text-decoration-none card-day-h2" do %>
                       <h2><%= dish.recipe.name %></h2>
