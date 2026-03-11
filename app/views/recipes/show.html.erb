@@ -18,25 +18,28 @@
             <%= image_tag "flipcard_placeholder.jpg", class: "img-fluid card-img-top" %>
           <% end %>
         </div>
-        <div class="card-body position-relative">
+        <div class="card-body position-relative" data-controller="favorites">
           <div class="d-flex justify-content-between align-items-start">
             <div class="flex-grow-1">
               <h1 class="card-title display-4 mb-2"><%= @recipe.name %></h1>
               <div class="mb-3">
-                <span class="badge bg-primary me-2">
-                  <i class="fa-solid fa-stopwatch"></i> <%= @recipe.cooktime/60 %> mins
+                <span class="badge bg-warning">
+                  <i class="fa-solid fa-stopwatch"></i> <%= @recipe.cooktime+@recipe.preptime %> mins
                 </span>
-                <span class="badge bg-secondary mb-2">
+                <span class="badge bg-primary mb-2">
                   <i class="fa-solid fa-utensils"></i> <%= @recipe.cuisine %>
                 </span>
+                <% @recipe.tags.each do |tag| %>
+                  <span class="badge bg-secondary mb-2">
+                    <i class="fa-regular fa-circle-check"></i> <%= tag %>
+                  </span>
+                <% end %>
               </div>
             </div>
             <div class="d-flex flex-column align-items-end">
-              <%= link_to toggle_favorites_path(recipe_id: @recipe.id),
-                          data: { turbo_method: :post },
-                          class: "p-1 mb-5" do %>
+              <a data-action="click->favorites#toggle" data-recipe-id="<%= @recipe.id %>" data-favorites-target="btns" class="p-1 mb-5">
                 <i class="<%= current_user.favorited?(@recipe) ? 'fa-solid fa-heart' : 'fa-regular fa-heart' %> fa-lg"></i>
-              <% end %>
+              </a>
             </div>
           </div>
             <div class="position-absolute bottom-0 start-0 p-3">
