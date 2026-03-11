@@ -6,20 +6,22 @@ class Ai::WeekGen
     @user = user
   end
 
-  def generate_week(month = (Date.today + 7).beginning_of_week.month,
-                    week_start = (Date.today + 7).beginning_of_week, day_templates = nil)
+  def generate_week(attributes)
+    puts "*" * 30
+    puts "attributes in week gen: #{attributes}"
+    puts "*" * 30
+    month = attributes["month"]
+    week_start = attributes["week_start"]
+    day_templates = attributes["day_templates"]
+    week_id = attributes["week_id"]
     puts "generate week starting"
     puts "day templates: #{day_templates}"
-
     puts "*" * 30
-    @week = Week.create(user: @user, month: month)
-    @rubyllm = RubyLLM.chat
-                      .with_instructions(prompt_gen)
-                      .with_schema(Ai::Schemas::WeekSchema.new("WeekSchema"))
-    response = @rubyllm.ask("The client's previous weeks meals were: \n #{previous_week_meals_text(@user,
-                                                                                                   week_start)}. Monday's date is #{week_start}. The user only needs meals for #{day_template_text(day_templates)} Here are the recipes you can select from: \n #{recipe_filter(week_start)}")
-    puts "response: #{response}"
+    @week = Week.find(week_id)
+    @rubyllm = RubyLLM.chat.with_instructions(prompt_gen).with_schema(Ai::Schemas::WeekSchema.new("WeekSchema"))
+    response = @rubyllm.ask("The client's previous weeks meals were: \n #{previous_week_meals_text(@user, week_start)}. Monday's date is #{week_start}. The user only needs meals for #{day_template_text(day_templates)} Here are the recipes you can select from: \n #{recipe_filter(week_start)}")
     response.content["days"].each do |day|
+      puts day
       new_day = Day.create(week: @week, date: day["date"])
       day["meals"][0].each do |key, value|
         puts "Key: #{key}, Value: #{value.to_i} for day: #{new_day.date}"
@@ -97,12 +99,6 @@ class Ai::WeekGen
       end.join("\n")
       return recipes_text
     end
-    recipes_text = recipes_filter_disease.map do |recipe|
-      favoritized = @user.favorited?(recipe) ? "(Favorited Recipe)" : ""
-      "(#{favoritized})#{recipe.name} - ID: #{recipe.id}"
-    end.join("\n")
-    return recipes_text
-  end
 
   def day_template_text(day_templates)
     return "None." if day_templates.nil?
