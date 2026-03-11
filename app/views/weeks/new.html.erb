@@ -5,11 +5,7 @@
   <h1 class="mt-4">Let's plan our meals for the week</h1>
   <p>Select the portions you want for each day</p>
 
-  <div data-controller="sortable" id="calendar" style="position: relative;">
-    <div class="calendar-overlay d-none" data-week-select-target="overlay"></div>
-    <div class="calendar-spinner d-none" data-week-select-target="spinner">
-      <%= image_tag "loading.gif", class: "spinning", width: 160, height: 160 %>
-    </div>
+  <div data-controller="sortable" id="calendar">
 
     <div data-controller="slider">
       <div>
