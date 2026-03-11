@@ -3,15 +3,25 @@
 # ============================================================
 
 puts "Cleaning database..."
+puts "Deleting Favorites..."
 Favorite.destroy_all
+puts "Deleting Dishes..."
 Dish.destroy_all
+puts "Deleting Shopping Items..."
 ShoppingItem.destroy_all
+puts "Deleting Days..."
 Day.destroy_all
+puts "Deleting Weeks..."
 Week.destroy_all
+puts "Deleting Day Templates..."
 DayTemplate.destroy_all
+# puts "Deleting Recipe Items..."
 # RecipeItem.destroy_all
+# puts "Deleting Recipes..."
 # Recipe.destroy_all
+# puts "Deleting Ingredients..."
 # Ingredient.destroy_all
+puts "Deleting Users..."
 User.destroy_all
 
 
@@ -40,7 +50,7 @@ ALL_ALLERGIES = ["peanuts", "tree nuts", "shellfish", "dairy", "gluten", "soy", 
 # ALL_CUISINES = ["French", "Italian", "Japanese", "Mexican", "Indian", "Thai",
 #                 "Chinese", "Mediterranean", "American", "Spanish"]
 
-ALL_DISEASES = [nil, "diabetes", "hypertension", "celiac disease", "IBS", "gout"]
+ALL_DISEASES = [nil, "gluten", "soy", "dairy"]
 
 UNITS = ["g", "ml", "tbsp", "tsp", "cup", "oz", "piece", "clove", "slice"]
 
@@ -90,50 +100,54 @@ LOREM_INSTRUCTIONS = "1. Preheat the oven to 200°C (400°F). Line a baking tray
 # We've already seeded the recipes into the database.
 # Only run this if you want to recreate the recipes.
 
+# require "json"
+
 # puts "Creating recipes..."
-# filepath = "./db/data/recipesV2.json"
+# filepath = Rails.root.join("db", "data", "recipesV3.json")
 # serialized_data = File.read(filepath)
 # recipes_data = JSON.parse(serialized_data)
 # recipes = recipes_data["data"]
-#
-#
+
 # recipes.each do |recipe_hash|
-# name = recipe_hash["name"]
-# cooktime = [600, 900, 1200, 1800, 2400, 3000].sample 
-# instructions = recipe_hash["instructions"]
-# cuisine = recipe_hash["cuisine"]
-# image_url = recipe_hash["image_url"]
-#
-# recipe = Recipe.create!(
-#   name: name,
-#   cooktime: cooktime,
-#   instructions: instructions,
-#   cuisine: cuisine,
-#   image_url: image_url
-# )
-#
-# ingredients = recipe_hash["ingredients"]
-#
-# ingredients.each do |ingredient_hash|
-#   ingredient = Ingredient.find_by(name: ingredient_hash["name"].downcase)
-#   ingredient = Ingredient.create(name: ingredient_hash["name"].downcase) unless ingredient
-#
-#   raw_amount = ingredient_hash["amount"].to_s
-#
-#   # Extract numeric part; default to 1 if missing
-#   parsed_amount = raw_amount.gsub(/[^0-9.]+/, "").strip
-#   amount = parsed_amount.empty? ? 1 : parsed_amount.to_f
-#
-#   # Extract unit part; ensure it is never blank for validation
-#   unit = raw_amount.gsub(/[0-9.]+/, "").strip
-#   unit = "unit" if unit.blank?
-#
-#   RecipeItem.create!(
-#     recipe: recipe,
-#     ingredient: ingredient,
-#     amount: amount,
-#     unit: unit
+#   name         = recipe_hash["name"]
+#   cooktime     = recipe_hash["cook_time"]   # minutes
+#   preptime     = recipe_hash["prep_time"]   # minutes
+#   instructions = recipe_hash["instructions"]
+#   cuisine      = recipe_hash["cuisine"]
+#   tags         = recipe_hash["tags"] || []
+
+#   recipe = Recipe.create!(
+#     name: name,
+#     cooktime: cooktime,
+#     preptime: preptime,
+#     instructions: instructions,
+#     cuisine: cuisine,
+#     tags: tags
 #   )
+
+#   ingredients = recipe_hash["ingredients"]
+
+#   ingredients.each do |ingredient_hash|
+#     ingredient_name = ingredient_hash["name"].downcase
+#     ingredient = Ingredient.find_by(name: ingredient_name)
+#     ingredient ||= Ingredient.create!(name: ingredient_name)
+
+#     raw_amount = ingredient_hash["amount"].to_s
+
+#     # Extract numeric part; default to 1 if missing
+#     parsed_amount = raw_amount.gsub(/[^0-9.]+/, "").strip
+#     amount = parsed_amount.empty? ? 1 : parsed_amount.to_f
+
+#     # Extract unit part; ensure it is never blank for validation
+#     unit = raw_amount.gsub(/[0-9.]+/, "").strip
+#     unit = "unit" if unit.blank?
+
+#     RecipeItem.create!(
+#       recipe: recipe,
+#       ingredient: ingredient,
+#       amount: amount,
+#       unit: unit
+#     )
 #   end
 # end
 
@@ -161,8 +175,8 @@ ALL_INGREDIENTS = Ingredient.all.pluck(:name).map(&:downcase)
 ALL_CUISINES = Recipe.all.pluck(:cuisine).map(&:capitalize)
 
   user = User.create!(
-    email:                  "doug_is_human@lewagon.com",
-    username:               "Doug the Human",
+    email:                  "jeff@business.com",
+    username:               "Jeff Business",
     password:               "123456",
     allergies:              nil,
     preferred_ingredients:  ALL_INGREDIENTS.sample(rand(2..5)),
@@ -180,7 +194,7 @@ ALL_CUISINES = Recipe.all.pluck(:cuisine).map(&:capitalize)
       user: user,
       day_name: day_name,
       breakfast: 0,
-      lunch:     0,
+      lunch:     2,
       dinner:    2
     )
   end
@@ -226,39 +240,43 @@ ALL_CUISINES = Recipe.all.pluck(:cuisine).map(&:capitalize)
   # ============================================================
   week_start = Date.today.beginning_of_week(:monday)
 
-  [week_start].each do |start_date|
-    week = Week.create!(
-      user: user,
-      month: start_date.month
-    )
+  # Create a new week for the user and generate dinner dishes using AI::DishGen for each day
+  # Generate a dinner dish for 2 people using AI::DishGen
+  Ai::WeekGen.new(user).generate_week(week_start.month, week_start)
 
-    # Track ingredients needed across the week for shopping list
-    ingredient_totals = Hash.new { |h, k| h[k] = { amount: 0.0, unit: nil } }
-
-    7.times do |day_index|
-      day = Day.create!(
-        week: week,
-        date: start_date + day_index.days
-      )
-
-      rand(1..3).times do
-        recipe = Recipe.all.sample
-        dish = Dish.create!(
-          day: day,
-          recipe: recipe,
-          portions: rand(1..3),
-          category: CATEGORIES.sample
-        )
-
-        recipe.recipe_items.each do |ri|
-          key = [ri.ingredient_id, ri.unit]
-          ingredient_totals[key][:amount] += ri.amount * dish.portions
-          ingredient_totals[key][:unit]    = ri.unit
-          ingredient_totals[key][:ingredient_id] = ri.ingredient_id
-        end
-      end
-    end
-  end
+  # [week_start].each do |start_date|
+  #   week = Week.create!(
+  #     user: user,
+  #     month: start_date.month
+  #   )
+  #
+  #   # Track ingredients needed across the week for shopping list
+  #   ingredient_totals = Hash.new { |h, k| h[k] = { amount: 0.0, unit: nil } }
+  #
+  #   7.times do |day_index|
+  #     day = Day.create!(
+  #       week: week,
+  #       date: start_date + day_index.days
+  #     )
+  #
+  #     3.times do |i|
+  #       recipe = Recipe.all.sample
+  #       dish = Dish.create!(
+  #         day: day,
+  #         recipe: recipe,
+  #         portions: 2,
+  #         category: ["breakfast", "lunch", "dinner"][i]
+  #       )
+  #
+  #       recipe.recipe_items.each do |ri|
+  #         key = [ri.ingredient_id, ri.unit]
+  #         ingredient_totals[key][:amount] += ri.amount * dish.portions
+  #         ingredient_totals[key][:unit]    = ri.unit
+  #         ingredient_totals[key][:ingredient_id] = ri.ingredient_id
+  #       end
+  #     end
+  #   end
+  # end
 
   # ============================================================
   # NEXT WEEK
