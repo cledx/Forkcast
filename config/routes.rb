@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   resources :recipes, only: [:show]
 
   resources :favorites, only: [:index, :create, :destroy] do
-    post :toggle, on: :collection
+    get :toggle, on: :collection
   end
 
   get "/settings", to: "users#settings", as: :settings
