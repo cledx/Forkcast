@@ -22,13 +22,25 @@
   margin-top: 24px;
 }
 
+#calendar .simple-calendar tr {
+  height: inherit;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.simple-calendar .day {
+  height: inherit !important;
+  width: 100%;
+}
+
 .calendar-day {
   padding: 12px;
   background: white;
   border-radius: 12px;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: repeat(3, auto);
   height: 100%;
+  gap: 8px;
 }
 
 // highlight
@@ -77,6 +89,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
+  height: 100%;
 
   &:hover {
     transform: translateY(-2px);
