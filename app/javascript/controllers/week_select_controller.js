@@ -2,7 +2,10 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="week-select"
 export default class extends Controller {
-  generate() {
+  static targets = ["meal", "value"]
+
+  generate(event) {
+    event.preventDefault();
     const formData = {
             day_templates: {
               monday: { breakfast: 2, lunch: 2, dinner: 2 },
@@ -15,18 +18,21 @@ export default class extends Controller {
             }
           }
           // params[:day_templates][:monday][:breakfast] = 2
-
+          console.log(this.mealTargets)
+          console.log(this.valueTarget.value)
           const url = `/weeks`
 
-          fetch(url, {
-            method: "POST",
-            headers:{
-              'Content-Type': 'application/json',
-              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify(formData)
-            }).then(response => {
-              if (response.redirected) window.location.href = response.url
-            })
-        }
+          // fetch(url, {
+          //   method: "POST",
+          //   headers:{
+          //     'Content-Type': 'application/json',
+          //     'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+          //   },
+          //   body: JSON.stringify(formData)
+          //   }).then(response => {
+          //     // if (response.redirected) window.location.href = response.url
+          //   })
+
+
+    }
 }
