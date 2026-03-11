@@ -86,7 +86,7 @@
                       <h5><%= dish.recipe.name %></h5>
                       <p class="mb-0 text-muted">Ingredients:</p>
                       <ul class="list mb-0 text-muted">
-                        <% dish.recipe.ingredients.first(3).each do |ingredient| %>
+                        <% dish.recipe.ingredients.first(6).each do |ingredient| %>
                           <li><%= ingredient.name %></li>
                         <% end %>
                       </ul>
