@@ -5,7 +5,6 @@ export default class extends Controller {
   static targets = ["meal", "value"]
 
   generate(event) {
-
     event.preventDefault();
     const formData = {
             day_templates: {
