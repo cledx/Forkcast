@@ -59,7 +59,7 @@ export default class extends Controller {
           }
 
           if (previousCategory.children.length === 0) {
-            previousCategory.innerHTML = `<div class="empty-meal">
+            previousCategory.innerHTML = `<div class="empty-meal h-100">
               <span>No ${previousCategory.dataset.category} planned</span>
             </div>`
           }
