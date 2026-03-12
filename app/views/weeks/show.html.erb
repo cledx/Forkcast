@@ -73,6 +73,10 @@
                 <span><%= category.capitalize %></span>
               </div>
               <% dishes = day.dishes.select { |dish| dish.category == category } %>
+              <% puts "*" * 30 %>
+              <% puts "Day: #{day.inspect}" %>
+              <% puts "Dishes: #{dishes.inspect}" %>
+              <% puts "*" * 30 %>
               <div class="sortable-list h-100"
                   data-controller="sortable"
                   data-day_id="<%= day.id %>"
