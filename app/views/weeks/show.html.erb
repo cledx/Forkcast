@@ -19,14 +19,15 @@
         <% meals.each do |name| %>
           <% meal = @today.dishes.where(category: name) %>
           <% unless meal.empty? %>
-            <div class="col-md-4">
-              <div id="<%= name %>">
-                <%= link_to dish_path(meal[0]), class: "text-decoration-none" do %>
-                  <div class="card p-3 w-100 meal-card" style="height: 140px">
-                    <p class="meal-category"><%= meal[0].category.capitalize %></p>
-                    <h5 class="card-title"><%= meal[0].recipe.name %></h5>
-                  </div>
-                <% end %>
+            <div class="col-md-3 mb-4">
+              <div class="card recipe-card today-card position-relative">
+                <% recipe_image = "recipe_images/#{meal[0].recipe.name.downcase.gsub(' ', '_')}.png" %>
+                <%= image_tag recipe_image, class: "img-fluid card-img-top", onerror: "this.src='/assets/flipcard_placeholder.jpg'" %>
+                <div class="card-body">
+                  <p class="meal-category mb-0"><%= meal[0].category.capitalize %></p>
+                  <h5 class="card-title"><%= meal[0].recipe.name %></h5>
+                  <%= link_to "", dish_path(meal[0]), class: "stretched-link" %>
+                </div>
               </div>
             </div>
           <% end %>
