@@ -58,21 +58,21 @@
 
     <%= week_calendar(number_of_weeks: @number_of_weeks, events: @calendar_days, attribute: :date) do |date, day| %>
       <% day = day.first %>
-      <div class="calendar-day d-flex flex-column <%= 'today-highlight' if day&.date&.to_date == Date.current %>" id="<%= day.id unless day.nil? %>">
+      <div class="calendar-day <%= 'today-highlight' if day&.date&.to_date == Date.current %>" id="<%= day.id unless day.nil? %>">
         <% if day %>
           <% ["breakfast", "lunch", "dinner"].each do |category| %>
-            <div class="meal-section mb-3">
+            <div class="meal-section">
               <div>
                 <span><%= category.capitalize %></span>
               </div>
               <% dishes = day.dishes.select { |dish| dish.category == category } %>
-              <div class="sortable-list"
+              <div class="sortable-list h-100"
                   data-controller="sortable"
                   data-day_id="<%= day.id %>"
                   data-category="<%= category %>">
                   <% if dishes.any? %>
                     <% dishes.each do |dish| %>
-                      <div class="planner-card w-100 position-relative"
+                      <div class="planner-card w-100 position-relative h-100 align-content-center"
                         data-dish_id="<%= dish.id %>" data-recipe_name="<%= dish.recipe.name %>">
                         <%= link_to dish_path(dish),
                                     class: "stretched-link text-decoration-none" do %>
@@ -86,7 +86,7 @@
                       </div>
                     <% end %>
                 <% else %>
-                  <div class="empty-meal" data-week-loading-target="empty">
+                  <div class="empty-meal h-100" data-week-loading-target="empty">
                     <span>No <%= category %> planned</span>
                   </div>
                 <% end %>
@@ -95,7 +95,7 @@
           <% end %>
         <% else %>
           <div class="calendar-day empty-day">
-            <p class="text-muted small">No day created</p>
+            <p class="text-muted small mb-0 align-content-center">No day created</p>
           </div>
         <% end %>
       </div>
@@ -109,15 +109,7 @@
       <span>Shopping list</span>
       <i class="fa-solid fa-chevron-right fa-xs"></i>
     <% end %>
-    <%= link_to weeks_path,
-                class: "btn btn-primary btn-sm d-flex align-items-center gap-2",
-                data: {
-                  action: "click->week-loading#show",
-                  week_loading_target: "button",
-                  turbo_method: :post
-                } do %>
-      <span data-week-loading-target="buttonText">Plan Next Week</span>
-    <% end %>
+    <%= link_to "Plan Next Week", new_week_path, class: "btn btn-primary btn-sm d-flex align-items-center gap-2" %>
   </div>
 
 </div>
