@@ -33,6 +33,23 @@
       <i class="fa-solid fa-plus fa-sm"></i>
     </span>
     </div>
+  </div>
+
+  <div data-controller="sortable" id="calendar">
+    <div class = "mb-4">
+      <label for="familySizeInput" class="form-label" data-slider-target="sliderValue">Portions: </label>
+      <input
+        type="number"
+        class="form-control w-auto d-inline-block"
+        min="1"
+        max="10"
+        step="1"
+        value="1"
+        id="familySizeInput"
+        data-slider-target="value"
+        data-action="input->slider#updateValue"
+        style="width: 80px;"
+      >
     </div>
         <div>
           <label for="familySizeInput" class="form-label" data-slider-target="sliderValue">
