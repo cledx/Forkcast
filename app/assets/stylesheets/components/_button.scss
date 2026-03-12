@@ -92,11 +92,20 @@
   }
 }
 
+.parent-element {
+  &:hover .delete-dish-btn {
+    opacity: 1;
+  }
+}
+
 .delete-dish-btn {
   position: absolute;
-  top: 1rem;
+  top: 0.5rem;
   right: 1rem;
   z-index: 9999;
+  color: $text-muted;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .parent-element {
