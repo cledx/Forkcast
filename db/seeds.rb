@@ -265,7 +265,7 @@ ALL_CUISINES = Recipe.all.pluck(:cuisine).map(&:capitalize)
   Ai::WeekGen.new(user).generate_week(attributes)
 
   # Remove the dummy empty week created by User#create_initial_week
-  user.weeks.first.destroy
+
 
   # [week_start].each do |start_date|
   #   week = Week.create!(
