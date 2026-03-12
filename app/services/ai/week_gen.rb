@@ -63,7 +63,7 @@ class Ai::WeekGen
     prompt = <<-PROMPT
       You are a meal cooridnator.
       The user is a busy person who need help with planning their meals to prep for the week.
-      You need to plan a few meals for them to cook in advance to feed them for the week. Select only 3 different recipes maximum for the whole week, and spread them out between the days.
+      You need to plan a few meals for them to cook in advance to feed them for the week. Select only 3 different recipes maximum for the whole week, and spread them out between the days. Do not use the same recipe more than 3 times the whole week.
       Select from the following recipes and pick the best ones for the user.
     PROMPT
     return prompt
@@ -72,21 +72,29 @@ class Ai::WeekGen
   def recipe_filter(week_start)
     # Return only recipes that do NOT contain any of the tags in @user.disease
     # Exclude recipes that were in the user's previous week's dishes
-    disease_tags = Array(@user.disease)
-    allergy_tags = Array(@user.allergies)
+    disease_tags = Array(@user.disease).reject(&:blank?)
+    allergy_tags = Array(@user.allergies).reject(&:blank?)
     previous_recipe_ids = @user.previous_week_dishes(week_start).pluck(:recipe_id).uniq
 
+    recipes = Recipe.where.not(id: previous_recipe_ids)
+
+    # tags is a string array; use unnest + LIKE so we don't use string ops on the array
+    disease_tags.each do |tag|
+      pattern = "%#{Recipe.sanitize_sql_like(tag)}%"
+      recipes = recipes.where(
+        "NOT EXISTS (SELECT 1 FROM unnest(COALESCE(recipes.tags, ARRAY[]::text[])) AS t WHERE t LIKE ?)",
+        pattern
+      )
+    end
+    allergy_tags.each do |tag|
+      pattern = "%#{Recipe.sanitize_sql_like(tag)}%"
+      recipes = recipes.where(
+        "NOT EXISTS (SELECT 1 FROM unnest(COALESCE(recipes.tags, ARRAY[]::text[])) AS t WHERE t LIKE ?)",
+        pattern
+      )
+    end
+
     favorited_recipe_ids = @user.favorited_recipes
-    recipes = Recipe
-              .where.not(id: previous_recipe_ids)
-              .where(
-                disease_tags.reject(&:blank?).map { |tag| "tags NOT LIKE ?" }.join(' AND '),
-                *disease_tags.reject(&:blank?).map { |tag| "%#{tag}%" }
-              )
-              .where(
-                allergy_tags.reject(&:blank?).map { |tag| "tags NOT LIKE ?" }.join(' AND '),
-                *allergy_tags.reject(&:blank?).map { |tag| "%#{tag}%" }
-              )
     recipes_text = recipes.map do |recipe|
       favoritized = favorited_recipe_ids.include?(recipe.id) ? "(Favorited Recipe)" : ""
       "#{favoritized}#{recipe.name} - ID: #{recipe.id}"
