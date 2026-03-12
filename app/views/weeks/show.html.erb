@@ -59,6 +59,7 @@
     <%= week_calendar(number_of_weeks: @number_of_weeks, events: @calendar_days, attribute: :date) do |date, day| %>
       <% day = day.first %>
       <div class="calendar-day <%= 'today-highlight' if day&.date&.to_date == Date.current %>" id="<%= day.id unless day.nil? %>">
+
         <% if day %>
           <% ["breakfast", "lunch", "dinner"].each do |category| %>
             <div class="meal-section">
