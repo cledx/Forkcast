@@ -10,20 +10,25 @@ class Ai::WeekGen
     puts "*" * 30
     puts "attributes in week gen: #{attributes}"
     puts "*" * 30
-    month = attributes["month"]
-    week_start = attributes["week_start"]
     day_templates = attributes["day_templates"]
     week_id = attributes["week_id"]
     puts "generate week starting"
     puts "day templates: #{day_templates}"
     puts "*" * 30
     @week = Week.find(week_id)
+    month = @week.month
+    week_start = @week.days.first.date.beginning_of_week
     @rubyllm = RubyLLM.chat.with_instructions(prompt_gen).with_schema(Ai::Schemas::WeekSchema.new("WeekSchema"))
     response = @rubyllm.ask("The client's previous weeks meals were: \n #{previous_week_meals_text(@user, week_start)}. Monday's date is #{week_start}. The user only needs meals for #{day_template_text(day_templates)} Here are the recipes you can select from: \n #{recipe_filter(week_start)}")
     response.content["days"].each do |day|
       puts day
-      new_day = Day.create(week: @week, date: day["date"])
+
+      # Reuse or create the day for this date instead of always creating a new one.
+      day_date = Date.parse(day["date"].to_s)
+      new_day = @week.days.find_or_create_by!(date: day_date)
+
       day["meals"][0].each do |key, value|
+        puts "v" * 30
         puts "Key: #{key}, Value: #{value.to_i} for day: #{new_day.date}"
         # Find day_template for this day by weekday symbol (e.g., :monday)
         # Then get the portion for the current category key from that day's template
@@ -32,10 +37,12 @@ class Ai::WeekGen
         puts "portions #{portions}"
         if portions.to_i > 0
           new_dish = Dish.create(day: new_day, portions: portions, recipe_id: value, category: key)
+          puts "New dish: #{new_dish.inspect} for #{new_dish.day.date} for week_id: #{new_dish.day.week.id}"
         else
-          new_dish = "No meal needed for #{key.capitalize} on #{new_day.date.strftime('%A')}"
+          puts "No meal needed for #{key.capitalize} on #{new_day.date.strftime('%A')}"
         end
-        puts "New dish: #{new_dish}"
+        
+        puts "^" * 30
       end
       new_day.save
     end
@@ -63,7 +70,7 @@ class Ai::WeekGen
     prompt = <<-PROMPT
       You are a meal cooridnator.
       The user is a busy person who need help with planning their meals to prep for the week.
-      You need to plan a few meals for them to cook in advance to feed them for the week. Select only 3 different recipes maximum for the whole week, and spread them out between the days. Do not use the same recipe more than 3 times the whole week.
+      You need to plan a few meals for them to cook in advance to feed them for the week. Select only 3 different recipes maximum for the whole week, and spread them out between the days.
       Select from the following recipes and pick the best ones for the user.
     PROMPT
     return prompt

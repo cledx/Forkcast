@@ -65,6 +65,10 @@ class WeeksController < ApplicationController
     current_user.weeks.first.destroy if current_user.weeks.first.days.nil?
     @week = Week.new(user: current_user)
     @week.month = (Date.today + 7).beginning_of_week.month
+    week_start = (Date.today + 7).beginning_of_week(:monday)
+    7.times do |i|
+      @week.days.build(date: week_start + i.days)
+    end
     @week.save!
 
     puts "Day templates from controller: #{day_templates}"
