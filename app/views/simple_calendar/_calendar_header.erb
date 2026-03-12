@@ -1,0 +1,13 @@
+<thead>
+  <tr>
+    <% week.each do |day| %>
+      <th class="text-center <%= 'today' if day == Date.current %>">
+        <% if day >= current_week.days.first.date.to_date && day <= current_week.days.last.date.to_date %>
+          <%= link_to(day.strftime("%a %d"), week_day_path(current_week, day), class: "text-decoration-none") %>
+        <% else %>
+          <%= link_to(day.strftime("%a %d"), week_day_path(current_week.next_week, day), class: "text-decoration-none") %>
+        <% end %>
+      </th>
+    <% end %>
+  </tr>
+</thead>
