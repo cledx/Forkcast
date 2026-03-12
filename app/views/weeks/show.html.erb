@@ -3,7 +3,7 @@
 
 </div>
 
-<div class="container" data-controller="week-loading" data-week-id="<%= @week.id %>" data-week-generation-week-id-value="<%= @week.id %>">
+<div class="container mb-4" data-controller="week-loading" data-week-id="<%= @week.id %>" data-week-generation-week-id-value="<%= @week.id %>">
 
   <!-- Today Section -->
   <% if @today.present? %>
@@ -41,7 +41,7 @@
   <div class="d-flex justify-content-between align-items-center">
     <h2 class="highlight-color m-0">Week Plan</h2>
     <div class="mb-2 d-flex justify-content-end gap-2">
-      <%= link_to week_shopping_items_path(@week), class: "btn btn-outline-primary-custom btn-sm d-flex align-items-center gap-2" do %>
+      <%= link_to week_shopping_items_path(@week), class: "btn btn-outline-custom btn-sm d-flex align-items-center gap-2" do %>
         <i class="fa-solid fa-basket-shopping p-1"></i>
         <span>Shopping List</span>
       <% end %>
