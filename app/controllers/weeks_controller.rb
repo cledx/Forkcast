@@ -16,6 +16,7 @@ class WeeksController < ApplicationController
 
   def new
     @week = Week.new
+    @user = current_user
   end
 
   def create
