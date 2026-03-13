@@ -9,6 +9,8 @@ class WeeksController < ApplicationController
     @recipe_first_day = {}
     @dish_colours = {}
     [@week, @week.next_week].each do |week|
+      next unless week
+
       week.days.each do |day|
         day.dishes.each do |dish|
           next if @dish_colours.key?(dish.recipe_id)
