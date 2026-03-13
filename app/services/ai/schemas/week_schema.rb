@@ -4,9 +4,9 @@ class Ai::Schemas::WeekSchema < RubyLLM::Schema
         string :date, description: "The datetime string of the day"
             array :meals, description: "The list of dishes for a day" do
                 object do
-                    integer :breakfast, description: "Recipe ID from the list for breakfast, or 0 if this meal is not needed"
-                    integer :lunch, description: "Recipe ID from the list for lunch, or 0 if this meal is not needed"
-                    integer :dinner, description: "Recipe ID from the list for dinner, or 0 if this meal is not needed"
+                    integer :breakfast, description: "Recipe ID from the list for breakfast"
+                    integer :lunch, description: "Recipe ID from the list for lunch"
+                    integer :dinner, description: "Recipe ID from the list for dinner"
                 end
             end
         end
