@@ -36,3 +36,6 @@ application.register("sortable", SortableController)
 
 import WeekLoadingController from "./week_loading_controller"
 application.register("week-loading", WeekLoadingController)
+
+import AlertController from "./alert_controller"
+application.register("alert", AlertController)

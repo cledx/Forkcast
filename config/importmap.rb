@@ -11,3 +11,4 @@ pin_all_from "app/javascript/channels", under: "channels"
 pin "bootstrap", to: "bootstrap.min.js", preload: true
 pin "@popperjs/core", to: "popper.js", preload: true
 pin "sortablejs" # @1.15.7
+pin "sweetalert2" # @11.26.20

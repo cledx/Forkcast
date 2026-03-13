@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import Swal from 'sweetalert2'
 
 export default class extends Controller {
   static targets = ["content", "loading", "message"]
@@ -25,5 +26,54 @@ export default class extends Controller {
       this.messageTarget.textContent = this.messages[i % this.messages.length]
       i++
     }, 2500)
+  }
+
+    trigger(e) {
+    e.preventDefault()
+    const action = e.currentTarget.href
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger m-2"
+      },
+      buttonsStyling: false
+    });
+    swalWithBootstrapButtons.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, change it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // regenerating dish
+        fetch(action, {
+          method: "PATCH",
+           headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector("meta[name='csrf-token']").content
+          }
+        })
+        // show loading
+        this.show()
+
+        swalWithBootstrapButtons.fire({
+          title: "Changed!",
+          text: "Your dish has been changed.",
+          icon: "success"
+        });
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire({
+          title: "Cancelled",
+          text: "Your imaginary file is safe :)",
+          icon: "error"
+        });
+      }
+    });
   }
 }
