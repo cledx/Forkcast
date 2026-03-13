@@ -7,7 +7,6 @@
       <p class="mb-4">Select the portions you want for each day</p>
     </div>
   </div>
-
   <div data-controller="sortable" id="calendar">
     <div class = "mb-4">
 
@@ -57,7 +56,7 @@
       <div class="calendar-day">
         <% ["breakfast", "lunch", "dinner"].each do |category| %>
           <div class="meal-wrapper">
-            <div class="meal-section mb-3 tiny-card btn btn-outline-primary" data-category="<%= category.capitalize %>" data-day="<%= date.strftime('%A').downcase %>" data-action="click->slider#addButton" data-slider-target="display">
+            <div class="meal-section mb-3 tiny-card btn btn-outline-custom" data-category="<%= category.capitalize %>" data-day="<%= date.strftime('%A').downcase %>" data-action="click->slider#addButton" data-slider-target="display">
               <div class="meal-header m-0">
                 <span><%= category.capitalize %></span>
               </div>
