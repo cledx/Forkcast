@@ -43,6 +43,15 @@
   }
 }
 
+.today-card {
+  height: auto;
+
+  .card-img-top {
+    height: 100px;
+    object-fit: cover;
+    width: 100%;
+  }
+}
 // Small Planner Card (Breakfast / Lunch / Dinner)
 
 .planner-card {
