@@ -6,7 +6,11 @@
 
 ## About
 
-Originally Reciplan; we felt that Forkcast matches our identity better (fork, as in "what's for dinner?" meets forecast, as in planning your week ahead). Forkcast is a meal planning web app designed to make weekly cooking simple and stress-free. Users save their ingredient preferences and dietary restrictions, create weekly meals based on portions, and generate shopping lists automatically. Whether you're cooking for one or feeding a family, Forkcast helps you spend less time deciding what to eat and more time enjoying it. Built with Ruby on Rails, it's a fast, modern, and easy-to-use tool for everyday meal prep.
+Originally Reciplan; we felt that Forkcast matches our identity better (fork, as in "what's for dinner?" meets forecast, as in planning your week ahead). 
+
+Forkcast is a meal planning web app designed to make weekly cooking simple and stress-free. Users save their ingredient preferences and dietary restrictions, create weekly meals based on portions, and generate shopping lists automatically. Whether you're cooking for one or feeding a family, Forkcast helps you spend less time deciding what to eat and more time enjoying it. 
+
+Built with Ruby on Rails, it's a fast, modern, and easy-to-use tool for everyday meal prep.
 
 ---
 
