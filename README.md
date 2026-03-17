@@ -62,7 +62,8 @@ Use your favorites as a quick reference when building future meal plans.
 ## 📸 Screenshots
 
 | Landing Page | Week Planner | Shopping List |
-| `screenshot_1.jpeg` | `screenshot_2.jpeg` | `screenshot_3.jpeg` |
+| ![Landing Page](assets/images/screenshot_1.jpeg) | ![Week Planner](assets/images/screenshot_2.jpeg) | ![Shopping List](assets/images/screenshot_3.jpeg) |
+
 
 ---
 
