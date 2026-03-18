@@ -41,8 +41,11 @@ With the overwhelming amount of recipes available on the web and on social media
 -Check out the recipes Forkcast has planned for you and make any changes you'd like
   1. reassign recipes to other meals or days by clicking and dragging,
   2. click on the day to see each meal
+     
        -regenerate recipes you'd like to change
+     
        -flip the recipe card to get a quick view of the ingredients
+     
        -view the recipe to see the details: recipe image, ingredients, directions on how to make it       
 
 Your plan will be automatically saved, so it'll be waiting for you every time you log in
